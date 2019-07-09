@@ -31,7 +31,14 @@ var app = {
             for (var i=0; i<contacts.length; i++) {
                 if (contacts[i].phoneNumbers) {  // many contacts don't have displayName
                     console.log(contacts[i].phoneNumbers);
-                    insertPhonebookRow(contacts[i].displayName, contacts[i].phoneNumbers[0].value);
+                    let name = contacts[i].displayName;
+                    try {
+                        contacts[i].name.givenName;
+                    }
+                    catch{
+                        console.log('Unable to find givenName')
+                    }
+                    insertPhonebookRow(name, contacts[i].phoneNumbers[0].value); 
                     if (i == 20) break;
                 }
             }
