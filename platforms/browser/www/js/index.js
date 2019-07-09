@@ -124,7 +124,7 @@ var app = {
                 tx.executeSql("SELECT * FROM contacts",[], async (tx, results)=>{
                     await displayContacts(null, results);
                     $(".editContact").bind( "tap", async (event) =>{
-                        let record = await fetchRowFromContacts(event.target.event.target.getAttribute('data-id'));
+                        let record = await fetchRowFromContacts(event.target.getAttribute('data-id'));
                         $("#editContactId").val(record.ID);
                         $("#editContactName").val(record.strFullName);
                         $("#editContactEmail").val(record.strEmail);
