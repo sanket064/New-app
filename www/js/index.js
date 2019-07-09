@@ -124,7 +124,7 @@ var app = {
                 tx.executeSql("SELECT * FROM contacts",[], async (tx, results)=>{
                     await displayContacts(null, results);
                     $(".editContact").bind( "tap", async (event) =>{
-                        let record = await fetchRowFromContacts(event.currentTarget.attributes.getNamedItem('data-id').value);
+                        let record = await fetchRowFromContacts(event.target.attribute('data-id').value);
                         $("#editContactId").val(record.ID);
                         $("#editContactName").val(record.strFullName);
                         $("#editContactEmail").val(record.strEmail);
@@ -139,7 +139,7 @@ var app = {
                 db = openDatabase("contactapp", "1", "Contact App", dbSize);
                 db.transaction(function(tx){
                     tx.executeSql(`SELECT * FROM contacts where ID = ?`,[id], (tx, results)=>{
-                        resolve(results.rows[0]);
+                        resolve(results.rows.item(0));
                     });
                 });
             });

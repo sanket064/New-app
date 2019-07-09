@@ -63,6 +63,9 @@
         },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.vanarts.week3"
+        },
+        "cordova-plugin-ios-contacts-permissions": {
+            "PACKAGE_NAME": "com.vanarts.week6"
         }
     },
     "dependent_plugins": {
