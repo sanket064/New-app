@@ -33,7 +33,7 @@ var app = {
                     console.log(contacts[i].phoneNumbers);
                     let name = contacts[i].displayName;
                     try {
-                        contacts[i].name.givenName;
+                        name = contacts[i].name.givenName;
                     }
                     catch{
                         console.log('Unable to find givenName')
