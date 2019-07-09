@@ -69,7 +69,7 @@ var app = {
 
                 var len = results.rows.length, i;
                 for (i = 0; i < len; i++) {
-                    list.append(`<li><a class="" data-id="${results.rows.item(i).ID}">${results.rows(i).strFullName}</li>`);
+                    list.append(`<li><a class="" data-id="${results.rows.item(i).ID}">${results.rows.item(i).strFullName}</li>`);
                 }
 
                 $("#phoneContactsListLi").listview("refresh");
@@ -124,7 +124,7 @@ var app = {
                 tx.executeSql("SELECT * FROM contacts",[], async (tx, results)=>{
                     await displayContacts(null, results);
                     $(".editContact").bind( "tap", async (event) =>{
-                        let record = await fetchRowFromContacts(event.target.attribute('data-id').value);
+                        let record = await fetchRowFromContacts(event.target.event.target.getAttribute('data-id'));
                         $("#editContactId").val(record.ID);
                         $("#editContactName").val(record.strFullName);
                         $("#editContactEmail").val(record.strEmail);
