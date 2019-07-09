@@ -51,7 +51,7 @@ var app = {
 
                 var len = results.rows.length, i;
                 for (i = 0; i < len; i++) {
-                    list.append(`<li><a class="editContact" data-id="${results.rows[i].ID}">${results.rows[i].strFullName}</li>`);
+                    list.append(`<li><a class="editContact" data-id="${results.rows.item(i).ID}">${results.rows.item(i).strFullName}</li>`);
                 }
 
                 $("#contactListLi").listview("refresh");
@@ -69,7 +69,7 @@ var app = {
 
                 var len = results.rows.length, i;
                 for (i = 0; i < len; i++) {
-                    list.append(`<li><a class="" data-id="${results.rows[i].ID}">${results.rows[i].strFullName}</li>`);
+                    list.append(`<li><a class="" data-id="${results.rows.item(i).ID}">${results.rows(i).strFullName}</li>`);
                 }
 
                 $("#phoneContactsListLi").listview("refresh");
