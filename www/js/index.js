@@ -1,5 +1,28 @@
 var dbSize = 5 * 1024 * 1024;
 var db;
+var map;
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: -34.397, lng: 150.644},
+    zoom: 8
+  });
+}
+
+function encodeImageUri(imageUri)
+{
+     var c=document.createElement('canvas');
+     var ctx=c.getContext("2d");
+     var img=new Image();
+     img.onload = function(){
+       c.width=this.width;
+       c.height=this.height;
+       ctx.drawImage(img, 0,0);
+     };
+     img.src=imageUri;
+     var dataURL = c.toDataURL("image/jpeg");
+     return dataURL;
+}
 
 var app = {
 
@@ -16,7 +39,35 @@ var app = {
     },
     
     receivedEvent: function(readyText) {
-        
+
+        function onGeoSuccess(position) {
+            let coords = { 'lat': position.coords.latitude, 'long': position.coords.longitude };
+            localStorage.setItem('currentPosition', JSON.stringify(coords));
+            console.log(coords);
+            
+            var myLatLng = {lat: coords.lat, lng: coords.long};
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 20,
+              center: myLatLng
+            });
+    
+            var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              title: 'My Location'
+            });
+        }
+
+        function onGeoError(error) {
+            alert('code: '    + error.code    + '\n' +
+                'message: ' + error.message + '\n');
+        }
+
+        // Options: throw an error if no update is received every 30 seconds.
+        geoOpts = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true};
+        var watchID = navigator.geolocation.watchPosition(onGeoSuccess, onGeoError, geoOpts);
+
         var options = new ContactFindOptions();
         options.filter="";          // empty search string returns all contacts
         options.multiple=true;      // return multiple results
@@ -25,12 +76,12 @@ var app = {
         // find contacts
         navigator.contacts.find(filter, onSuccess, onError, options);
 
+
         // onSuccess: Get a snapshot of the current contacts
         //
         function onSuccess(contacts) {
             for (var i=0; i<contacts.length; i++) {
                 if (contacts[i].phoneNumbers) {  // many contacts don't have displayName
-                    console.log(contacts[i].phoneNumbers);
                     let name = contacts[i].displayName;
                     try {
                         name = contacts[i].name.givenName;
@@ -76,7 +127,7 @@ var app = {
 
                 var len = results.rows.length, i;
                 for (i = 0; i < len; i++) {
-                    list.append(`<li><a class="" data-id="${results.rows.item(i).ID}">${results.rows.item(i).strFullName}</li>`);
+                    list.append(`<li><a class="copyPhoneContact" data-id="${results.rows.item(i).ID}">${results.rows.item(i).strFullName}</li>`);
                 }
 
                 $("#phoneContactsListLi").listview("refresh");
@@ -86,18 +137,23 @@ var app = {
         }
         async function insertRow(field1, field2){
             return new Promise(function(resolve, reject){
+                let lat ='', long ='';
                 db = openDatabase("contactapp", "1", "Contact App", dbSize);
     
                 db.transaction(function(tx) {
                     tx.executeSql("CREATE TABLE IF NOT EXISTS " +
-                            "contacts(ID INTEGER PRIMARY KEY ASC, strFullName, strEmail, strPhone, strPicture)");
+                            "contacts(ID INTEGER PRIMARY KEY ASC, strFullName, strEmail, strPhone, strPicture, lat, long)");
                 });
     
+                try {
+                    ({lat, long} = JSON.parse(localStorage.getItem('currentPosition')));
+                } catch (err){
+                    // Looks like we have no currentPosition 
+                    console.log(err);
+                }
                 // save our form to websql
                 db.transaction(function(tx){
-                    let contactName = field1;
-                    let contactEmail = field2;
-                    tx.executeSql(`INSERT INTO contacts(strFullName, strEmail) VALUES (?,?)`, [contactName, contactEmail], (tx, res)=>{
+                    tx.executeSql(`INSERT INTO contacts(strFullName, strEmail, lat, long) VALUES (?,?,?,?)`, [field1, field2, lat, long], (tx, res)=>{
                         console.log(res);
                         resolve(res);
                     });  
@@ -146,7 +202,18 @@ var app = {
                 db = openDatabase("contactapp", "1", "Contact App", dbSize);
                 db.transaction(function(tx){
                     tx.executeSql(`SELECT * FROM contacts where ID = ?`,[id], (tx, results)=>{
-                        resolve(results.rows.item(0));
+                        resolve(results.rows[0]);
+                    });
+                });
+            });
+        }
+
+        async function fetchRowFromPhoneContacts(id){
+            return new Promise((resolve, reject)=>{
+                db = openDatabase("contactapp", "1", "Contact App", dbSize);
+                db.transaction(function(tx){
+                    tx.executeSql(`SELECT * FROM phonebook where ID = ?`,[id], (tx, results)=>{
+                        resolve(results.rows[0]);
                     });
                 });
             });
@@ -166,6 +233,8 @@ var app = {
         $(document).ready(function(){     
             $("#saveNewContact").bind( "tap", tapHandler );
             $("#saveEditContact").bind( "tap", saveEditHandler );
+            $("#captureSelfie").bind( "tap", captureSelfie );
+            $("#cleanupSelfies").bind( "tap", cleanUpTempPhotos );
 
             openDBandLoadContacts();
 
@@ -182,7 +251,39 @@ var app = {
                 });
                 $("body").pagecontainer("change", "#home");
             }
-        
+
+            function captureSelfie(){
+
+                navigator.camera.getPicture(onSuccess, onFail, 
+                    { 
+                        quality: 50,
+                        destinationType: Camera.DestinationType.FILE_URI,
+                        cameraDirection: Camera.Direction.FRONT
+                    });
+            
+                function onSuccess(imageURI) {
+                    var image = document.getElementById('selfie');
+                    image.src = imageURI;
+                    console.log(encodeImageUri(imageURI));
+                }
+                
+                function onFail(message) {
+                    alert('Failed because: ' + message);
+                }
+            }
+
+            function cleanUpTempPhotos() {
+                navigator.camera.cleanup(onSuccess, onFail);
+
+                function onSuccess() {
+                    alert("Camera cleanup success.")
+                }
+
+                function onFail(message) {
+                    alert('Failed because: ' + message);
+                }
+            }
+
             $(document).on( 'pagebeforeshow' , '#home' ,function(event){
                 openDBandLoadContacts();
             }); 
@@ -192,6 +293,12 @@ var app = {
                 db.transaction(function(tx){
                     tx.executeSql("SELECT * FROM phonebook",[], async (tx, results)=>{
                         await displayPhoneContacts(null, results);
+                        debugger;
+                        $(".copyPhoneContact").bind( "tap", async (event) =>{
+                            let record = await fetchRowFromPhoneContacts(event.target.getAttribute('data-id'));
+                            await insertRow(record.strFullName, record.strPhone);
+                            $("body").pagecontainer("change", "#home");
+                        });
                     });
                 });
             });

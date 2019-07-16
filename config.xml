@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.vanarts.week6" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>New-app</name>
+<widget id="com.vanarts.week7" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+    <name>Week7</name>
     <description>
-        WebSQL working demo.
+        Introducing Google Maps
     </description>
-    <author email="anup.saund@gmail.com" href="https://anupsaund.com">
-        Anup Saund
+    <author email="anup.saund@gmail.com" href="http://anupsaund.com">
+        Anup Singh Saund
     </author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
