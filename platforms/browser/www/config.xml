@@ -6,7 +6,7 @@
     <feature name="Device">
         <param name="browser-package" value="Device" />
     </feature>
-    <name>Week7</name>
+    <name>New App</name>
     <description>
         Introducing Google Maps
     </description>
