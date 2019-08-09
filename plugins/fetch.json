@@ -166,5 +166,26 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-plugin-googlemaps": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-googlemaps"
+        },
+        "is_top_level": true,
+        "variables": {
+            "API_KEY_FOR_ANDROID": "AIzaSyAV-I596w48X3l5QxmmEiis_qD8qOBZnHQ",
+            "API_KEY_FOR_IOS": "AIzaSyAV-I596w48X3l5QxmmEiis_qD8qOBZnHQ"
+        }
+    },
+    "cordova-plugin-ios-camera-permissions": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-ios-camera-permissions@^1.2.0"
+        },
+        "is_top_level": true,
+        "variables": {
+            "CAMERA_USAGE_DESCRIPTION": "Allow the app to use your camera to take photos of business cards"
+        }
     }
 }
