@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.vanarts.week7" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.vanarts.week6" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0" xmlns:gap="http://phonegap.com/ns/1.0">
     <feature name="Camera">
         <param name="browser-package" value="Camera" />
     </feature>
     <feature name="Device">
         <param name="browser-package" value="Device" />
     </feature>
-    <name>New App</name>
+    <name>Week6</name>
     <description>
-        Introducing Google Maps
+        WebSQL working demo.
     </description>
-    <author email="anup.saund@gmail.com" href="http://anupsaund.com">
-        Anup Singh Saund
+    <author email="anup.saund@gmail.com" href="https://anupsaund.com">
+        Anup Saund
     </author>
     <content src="index.html" />
     <access origin="*" />
