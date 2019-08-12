@@ -55,6 +55,38 @@ var app = {
                     "phonebook(ID INTEGER PRIMARY KEY ASC, strFullName, strPhone)");
         });
         
+        function onGeoSuccess(position) {
+            let coords = { 'lat': position.coords.latitude, 'long': position.coords.longitude };
+            localStorage.setItem('currentPosition', JSON.stringify(coords));
+            console.log(coords);
+            
+            var myLatLng = {lat: coords.lat, lng: coords.long};
+            var map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 20,
+              center: myLatLng
+            });
+    
+            var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              title: 'My Location'
+            });
+        }
+        function onGeoError(error) {
+            alert('code: '    + error.code    + '\n' +
+                'message: ' + error.message + '\n');
+        }
+        // Options: throw an error if no update is received every 30 seconds.
+        geoOpts = { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true};
+        // var watchID = navigator.geolocation.watchPosition(onGeoSuccess, onGeoError, geoOpts);
+        var options = new ContactFindOptions();
+        options.filter="";          // empty search string returns all contacts
+        options.multiple=true;      // return multiple results
+        filter = ["displayName"];   // return contact.displayName field
+        // find contacts
+        navigator.contacts.find(filter, onSuccess, onError, options);
+        // onSuccess: Get a snapshot of the current contacts
+        //
         function onSuccess(contacts) {
             for (var i=0; i<contacts.length; i++) {
                 if (contacts[i].phoneNumbers) {  // many contacts don't have displayName
