@@ -6,12 +6,12 @@
     <feature name="Device">
         <param name="browser-package" value="Device" />
     </feature>
-    <name>Week6</name>
+    <name>Contact App</name>
     <description>
-        WebSQL working demo.
+       New Contact App and Game
     </description>
-    <author email="anup.saund@gmail.com" href="https://anupsaund.com">
-        Anup Saund
+    <author email="sanket064@gmail.com" href="sankettech.com">
+        Sanket Garg
     </author>
     <content src="index.html" />
     <access origin="*" />

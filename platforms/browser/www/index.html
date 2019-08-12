@@ -74,7 +74,7 @@
         <div data-role="footer" data-position="fixed">
             <nav data-role="navbar">
                 <ul>
-                    <li><a id="loginButton" href="#" data-icon="user">Login</a></li>
+                    <li><a id="loginButton" href="#" data-icon="user" data-transition="turn">Login</a></li>
                 </ul>
             </nav>
         </div>
@@ -167,9 +167,10 @@
         <div data-role="page" id="game">
         <div data-role="header"><h1>Let's Play Game</h1></div>
             <div class="center">
-            <canvas id="canvas">
+            <canvas id="gameBegin">
             </canvas>
         </div>
+        <button onclick="startGame()">Click Me</button>
         <div data-role="footer" data-position="fixed">
             <nav data-role="navbar">
                 <ul>
