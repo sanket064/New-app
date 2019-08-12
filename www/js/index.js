@@ -1,33 +1,36 @@
-var dbSize = 5 * 1024 * 1024;
-var db;
-var map;
-var baseUrl = "http://vanapi.gitsql.net";
-function initMap() {
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 8
-  });
+var myGamePiece;
+
+function startGame() {
+    myGameArea.start();
+    myGamePiece = new component(30, 30, "red", 10, 120);
 }
-function encodeImageUri(imageUri)
-{
-     var c=document.createElement('canvas');
-     var ctx=c.getContext("2d");
-     var img=new Image();
-     img.onload = function(){
-       c.width=this.width;
-       c.height=this.height;
-       ctx.drawImage(img, 0,0);
-     };
-     img.src=imageUri;
-     var dataURL = c.toDataURL("image/jpeg");
-     return dataURL;
-}
-async function asyncForEach(array, callback) {
-    for (let index = 0; index < array.length; index++) {
-      await callback(array[index], index, array);
+
+var myGameArea = {
+    canvas : document.createElement("canvas"),
+    start : function() {
+        this.canvas.width = 480;
+        this.canvas.height = 270;
+        this.context = this.canvas.getContext("2d");
+        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     }
 }
+
+function component(width, height, color, x, y) {
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;    
+    ctx = myGameArea.context;
+    ctx.fillStyle = color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+}
+
+var dbSize = 5 * 1024 * 1024;
+var db;
+var baseUrl = "http://vanapi.gitsql.net";
+
 var app = {
+
     initialize: function() {
         this.bindEvents();
     },
@@ -130,59 +133,24 @@ var app = {
                 resolve();
             });
         }
-        async function insertRow(field1, field2, serverId = '', initial=false){
-            return new Promise( async function(resolve, reject){
-                let newRecord=true;
-                let lat ='', long ='';
-                            
-                /*try {
-                    ({lat, long} = JSON.parse(localStorage.getItem('currentPosition')));
-                } catch (err){
-                    // Looks like we have no currentPosition 
-                    console.log(err);
-                }*/
-                if (serverId !==''){
-                    let dupe = await checkDupeServerId(serverId);
-                    if (dupe ) {
-                        resolve();
-                        newRecord = false;
-                    }
-                }
-                if(newRecord){
-                    // save our form to websql
-                    db.transaction(function(tx){
-                        tx.executeSql(`INSERT INTO contacts(strFullName, strEmail, lat, long, serverId) VALUES (?,?,?,?,?)`, [field1, field2, lat, long, serverId], async (tx, res)=>{
-                            console.log(res);
-                            if(initial == false){
-                                $.ajax({
-                                    type: "POST",
-                                    url: `${baseUrl}/contacts`,
-                                    contentType: "application/json; charset=utf-8",
-                                    dataType: "json",
-                                    data:  JSON.stringify({
-                                        firstName: field1,
-                                        lastName: '',
-                                        contactNumber: field2
-                                    }),
-                                    beforeSend: function(xhr){xhr.setRequestHeader('authtoken', localStorage.getItem('token'))},
-                                    success: function(response) {
-                                        db.transaction(function(tx){
-                                            tx.executeSql(`update contacts set serverId = ? where id = ?`, [response.id, res.insertId], 
-                                            (tx, result)=>{
-                                                console.log(result);
-                                                resolve(result);
-                                            });
-                                        });
-                                    },
-                                    error: function(e) {
-                                        alert('Error: ' + e.message);
-                                    }
-                                });
-                            }
-                        });  
-                    });
-                }
-            }); 
+        async function insertRow(field1, field2){
+            return new Promise(function(resolve, reject){
+                db = openDatabase("contactapp", "1", "Contact App", dbSize);
+    
+                db.transaction(function(tx) {
+                    tx.executeSql("CREATE TABLE IF NOT EXISTS " +
+                            "contacts(ID INTEGER PRIMARY KEY ASC, strFullName, strEmail, strPhone, strPicture)");
+                });
+    
+                // save our form to websql
+                db.transaction(function(tx){
+                    tx.executeSql(`INSERT INTO contacts(strFullName, strEmail) VALUES (?,?)`, [field1, field2], (tx, res)=>{
+                        console.log(res);
+                        resolve(res);
+                    });  
+                });
+            });
+            
         }
         
         async function insertPhonebookRow(field1, field2){
@@ -306,10 +274,7 @@ var app = {
         $(document).ready(function(){     
             $("#saveNewContact").bind( "tap", tapHandler );
             $("#saveEditContact").bind( "tap", saveEditHandler );
-            $("#captureSelfie").bind( "tap", captureSelfie );
-            $("#cleanupSelfies").bind( "tap", cleanUpTempPhotos );
             $("#loginButton").bind( "tap", performLogin);
-            $("#initialSync").bind( "tap", initialSync);
             $("#deleteContact").bind( "tap", deleteContact);
             function initialSync(){
                 $.ajax({
@@ -371,33 +336,6 @@ var app = {
                 // send delete ajax to remove it from the server too
                 await deleteContactFromDBandCloud($('#editContactId').val(), $('#editContactServerId').val());
                 $("body").pagecontainer("change", "#home");
-            }
-            function captureSelfie(){
-                navigator.camera.getPicture(onSuccess, onFail, 
-                    { 
-                        quality: 50,
-                        destinationType: Camera.DestinationType.FILE_URI,
-                        cameraDirection: Camera.Direction.FRONT
-                    });
-            
-                function onSuccess(imageURI) {
-                    var image = document.getElementById('selfie');
-                    image.src = imageURI;
-                    console.log(encodeImageUri(imageURI));
-                }
-                
-                function onFail(message) {
-                    alert('Failed because: ' + message);
-                }
-            }
-            function cleanUpTempPhotos() {
-                navigator.camera.cleanup(onSuccess, onFail);
-                function onSuccess() {
-                    alert("Camera cleanup success.")
-                }
-                function onFail(message) {
-                    alert('Failed because: ' + message);
-                }
             }
             $(document).on( 'pagebeforeshow' , '#home' ,function(event){
                 openDBandLoadContacts();

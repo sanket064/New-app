@@ -1,20 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.vanarts.week10" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="com.vanarts.week6" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Contact App</name>
     <description>
-       First Phone-Gap-Project
+       New Contact App & Game
     </description>
-    <author email="sanket064@gmail.com" href="http://sankettech.com">
-       Sanket Garg
+    <author email="sanket064@gmail.com" href="sankettech.com">
+        Sanket Garg
     </author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="android-minSdkVersion" value="14" />
     <plugin name="cordova-plugin-battery-status" source="npm" spec="~1.1.1" />
     <plugin name="cordova-plugin-camera" source="npm" spec="~2.1.1" />
-    <plugin name="cordova-plugin-ios-camera-permissions" spec="^1.2.0"> 
-        <variable name="CAMERA_USAGE_DESCRIPTION" value="Allow the app to use your camera to take photos of business cards" /> 
-    </plugin>
     <plugin name="cordova-plugin-media-capture" source="npm" spec="~1.2.0" />
     <plugin name="cordova-plugin-console" source="npm" spec="~1.0.2" />
     <plugin name="cordova-plugin-contacts" source="npm" spec="~2.0.1" />
