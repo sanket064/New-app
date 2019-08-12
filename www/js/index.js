@@ -8,8 +8,6 @@ function startGame() {
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     }
@@ -357,5 +355,16 @@ var app = {
         });
     }
 };
-
+$( document ).bind( 'mobileinit', function(){
+    $.mobile.loader.prototype.options.text = "loading";
+    $.mobile.loader.prototype.options.textVisible = false;
+    $.mobile.loader.prototype.options.theme = "a";
+    $.mobile.loader.prototype.options.html = "";
+  });
+  $.mobile.loading( 'show', {
+	text: 'foo',
+	textVisible: true,
+	theme: 'z',
+	html: ""
+});
    
