@@ -2,7 +2,7 @@
 <widget id="com.vanarts.week6" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>Contact App</name>
     <description>
-       New Contact App & Game
+       New Contact App and Game
     </description>
     <author email="sanket064@gmail.com" href="sankettech.com">
         Sanket Garg
