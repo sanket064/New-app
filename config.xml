@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <widget id="com.vanarts.week10" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:gap="http://phonegap.com/ns/1.0">
-    <name>Week 10</name>
+    <name>Contact App</name>
     <description>
         CRUD
     </description>
-    <author email="anup.saund@gmail.com" href="http://anupsaund.com">
-        Anup Singh Saund
+    <author email="sanket064@gmail.com" href="http://sankettech.com">
+       Sanket Garg
     </author>
     <content src="index.html" />
     <preference name="DisallowOverscroll" value="true" />
