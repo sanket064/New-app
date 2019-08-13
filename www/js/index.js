@@ -234,7 +234,7 @@ var app = {
                 resolve();
             });
         }
-        async function insertRow(field1, field2){
+        async function insertRow(field1, field2, field3){
             return new Promise(function(resolve, reject){
                 db = openDatabase("contactapp", "1", "Contact App", dbSize);
     
@@ -245,7 +245,7 @@ var app = {
     
                 // save our form to websql
                 db.transaction(function(tx){
-                    tx.executeSql(`INSERT INTO contacts(strFullName, strEmail) VALUES (?,?)`, [field1, field2], (tx, res)=>{
+                    tx.executeSql(`INSERT INTO contacts(strFullName, strEmail ,strPhone) VALUES (?,?,?)`, [field1, field2,field3], (tx, res)=>{
                         console.log(res);
                         resolve(res);
                     });  
@@ -254,13 +254,13 @@ var app = {
             
         }
         
-        async function insertPhonebookRow(field1, field2){
+        async function insertPhonebookRow(field1, field2, field3){
             return new Promise(function(resolve, reject){
                 
     
                 // save our form to websql
                 db.transaction(function(tx){
-                    tx.executeSql(`INSERT INTO phonebook(strFullName, strPhone) VALUES (?,?)`, [field1, field2], (tx, res)=>{
+                    tx.executeSql(`INSERT INTO phonebook(strFullName, strPhone) VALUES (?,?)`, [field1, field2, field3], (tx, res)=>{
                         console.log(res);
                         resolve(res);
                     });  
@@ -279,6 +279,7 @@ var app = {
                         $("#editContactServerId").val(record.serverId);
                         $("#editContactName").val(record.strFullName);
                         $("#editContactEmail").val(record.strEmail);
+                        $("#editContactPhone").val(record.strPhone);
                         $("body").pagecontainer("change", "#editContactPage");
                     });
                 });
@@ -344,7 +345,7 @@ var app = {
             return new Promise((resolve, reject) =>{
                 db = openDatabase("contactapp", "1", "Contact App", dbSize);
                 db.transaction( (tx) =>{
-                    tx.executeSql('UPDATE contacts SET strFullName=?, strEmail= ? WHERE id=?', [data.strFullName, data.strEmail, data.id], (tx, res) =>{
+                    tx.executeSql('UPDATE contacts SET strFullName=?, strEmail= ?, strPhone= ? WHERE id=?', [data.strFullName, data.strEmail, data.strPhone ,data.id], (tx, res) =>{
                         if(serverId !== ''){
                             $.ajax({
                                 type: "PUT",
@@ -355,7 +356,8 @@ var app = {
                                     id: serverId,
                                     firstName: data.strFullName,
                                     lastName: '',
-                                    contactNumber: data.strEmail
+                                    contactNumber: data.strEmail,
+                                    email: data.strPhone
                                 }),
                                 beforeSend: function(xhr){xhr.setRequestHeader('authtoken', localStorage.getItem('token'))},
                                 success: function(response) {
@@ -396,7 +398,7 @@ var app = {
                     success: function(response) {
                         console.log(response);
                         asyncForEach(response, async (record) => {
-                            await insertRow(record.firstName, record.contactNumber, record.id, true);
+                            await insertRow(record.firstName, record.contactNumber, record.email ,record.id, true);
                         });
                         
                         openDBandLoadContacts();
@@ -429,7 +431,7 @@ var app = {
             }
             openDBandLoadContacts();
             async function tapHandler( event ){
-                await insertRow($("#contactName").val(), $("#contactEmail").val());
+                await insertRow($("#contactName").val(), $("#contactEmail").val(),$("#contactPhone").val());
                 $("body").pagecontainer("change", "#home");
             }
             async function saveEditHandler (event){
@@ -437,6 +439,7 @@ var app = {
                     'id': $('#editContactId').val(), 
                     'strFullName': $('#editContactName').val(), 
                     'strEmail': $('#editContactEmail').val(),
+                    'strPhone': $('#editContactPhone').val(),
                 }, $('#editContactServerId').val());
                 $("body").pagecontainer("change", "#home");
             }
