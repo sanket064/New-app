@@ -62,6 +62,7 @@ canvas {
 .start-style{
     display: grid;
     justify-content: center;
+    margin-top: 40px;
 }
 .button-size{
     padding-left: 125px!important;
