@@ -6,7 +6,7 @@ var myObstacles = [];
 var myScore;
 
 function startGame() {
-    myGamePiece = new component(20, 10, "red", 10, 120);
+    myGamePiece = new component(20, 10, "red", 10, 75);
     myScore = new component("7px", "Arial", "Blue", 200, 20, "text");
     myGameArea.start();
 }
@@ -81,7 +81,7 @@ function updateGameArea() {
     if (myGameArea.frameNo == 1 || everyinterval(150)) {
         x = myGameArea.canvas.width;
         minHeight = 10;
-        maxHeight = 125;
+        maxHeight = 100;
         height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
         minGap = 50;
         maxGap = 200;
