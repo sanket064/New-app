@@ -179,7 +179,7 @@ var app = {
         
         db.transaction(function(tx) {
             tx.executeSql("CREATE TABLE IF NOT EXISTS " +
-                    "phonebook(ID INTEGER PRIMARY KEY ASC, strFullName, strPhone)");
+                    "phonebook(ID INTEGER PRIMARY KEY ASC, strFullName, strPhone , strEmail)");
         });
         
         function onGeoSuccess(position) {
@@ -323,7 +323,7 @@ var app = {
     
                 // save our form to websql
                 db.transaction(function(tx){
-                    tx.executeSql(`INSERT INTO phonebook(strFullName, strPhone) VALUES (?,?)`, [field1, field2, field3], (tx, res)=>{
+                    tx.executeSql(`INSERT INTO phonebook(strFullName, strPhone, strEmail) VALUES (?,?)`, [field1, field2, field3], (tx, res)=>{
                         console.log(res);
                         resolve(res);
                     });  
@@ -463,7 +463,7 @@ var app = {
                     success: function(response) {
                         console.log(response);
                         asyncForEach(response, async (record) => {
-                            await insertRow(record.firstName, record.contactNumber, record.email ,record.id, true);
+                            await insertRow(record.firstName, record.contactNumber, record.contactEmail ,record.id, true);
                         });
                         
                         openDBandLoadContacts();
@@ -554,7 +554,7 @@ async function deleteContact (event){
                         debugger;
                         $(".copyPhoneContact").bind( "tap", async (event) =>{
                             let record = await fetchRowFromPhoneContacts(event.target.getAttribute('data-id'));
-                            await insertRow(record.strFullName, record.strPhone);
+                            await insertRow(record.strFullName, record.strPhone ,record.strEmail);
                             $("body").pagecontainer("change", "#home");
                         });
                     });
