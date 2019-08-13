@@ -234,25 +234,75 @@ var app = {
                 resolve();
             });
         }
-        async function insertRow(field1, field2, field3){
-            return new Promise(function(resolve, reject){
-                db = openDatabase("contactapp", "1", "Contact App", dbSize);
+        // async function insertRow(field1, field2, field3){
+        //     return new Promise(function(resolve, reject){
+        //         db = openDatabase("contactapp", "1", "Contact App", dbSize);
     
-                db.transaction(function(tx) {
-                    tx.executeSql("CREATE TABLE IF NOT EXISTS " +
-                            "contacts(ID INTEGER PRIMARY KEY ASC, strFullName, strEmail, strPhone, strPicture)");
-                });
+        //         db.transaction(function(tx) {
+        //             tx.executeSql("CREATE TABLE IF NOT EXISTS " +
+        //                     "contacts(ID INTEGER PRIMARY KEY ASC, strFullName, strEmail, strPhone, strPicture)");
+        //         });
     
-                // save our form to websql
-                db.transaction(function(tx){
-                    tx.executeSql(`INSERT INTO contacts(strFullName, strEmail ,strPhone) VALUES (?,?,?)`, [field1, field2,field3], (tx, res)=>{
-                        console.log(res);
-                        resolve(res);
-                    });  
-                });
-            });
+        //         // save our form to websql
+        //         db.transaction(function(tx){
+        //             tx.executeSql(`INSERT INTO contacts(strFullName, strEmail ,strPhone) VALUES (?,?,?)`, [field1, field2,field3], (tx, res)=>{
+        //                 console.log(res);
+        //                 resolve(res);
+        //             });  
+        //         });
+        //     });
             
+        // }
+        async function insertRow(field1, field2, serverId = '', initial=false){
+            return new Promise( async function(resolve, reject){
+                let newRecord=true;
+                if (serverId !==''){
+                    let dupe = await checkDupeServerId(serverId);
+                    if (dupe ) {
+                        resolve();
+                        newRecord = false;
+                    }
+                }
+                if(newRecord){
+                    // save our form to websql
+                    db.transaction(function(tx){
+                        tx.executeSql(`INSERT INTO contacts(strFullName, strEmail, strPhone ,serverId) VALUES (?,?,?,?)`, [field1, field2, field3,serverId], async (tx, res)=>{
+                            console.log(res);
+                            if(initial == false){
+                                $.ajax({
+                                    type: "POST",
+                                    url: `${baseUrl}/contacts`,
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    data:  JSON.stringify({
+                                        firstName: field1,
+                                        lastName: '',
+                                        contactNumber: field2,
+                                        contactEmail: field3
+                                    }),
+                                    beforeSend: function(xhr){xhr.setRequestHeader('authtoken', localStorage.getItem('token'))},
+                                    success: function(response) {
+                                        db.transaction(function(tx){
+                                            tx.executeSql(`update contacts set serverId = ? where id = ?`, [response.id, res.insertId], 
+                                            (tx, result)=>{
+                                                console.log(result);
+                                                resolve(result);
+                                            });
+                                        });
+                                    },
+                                    error: function(e) {
+                                        alert('Error: ' + e.message);
+                                    }
+                                });
+                            }
+                        });  
+                    });
+                }
+            }); 
         }
+        
+        
+
         
         async function insertPhonebookRow(field1, field2, field3){
             return new Promise(function(resolve, reject){
