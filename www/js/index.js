@@ -261,7 +261,7 @@ var app = {
             });
         }
 
-          async function insertRow(field1, field2, serverId = '', initial=false){
+          async function insertRow(field1, field2, field3, serverId = '', initial=false){
             return new Promise( async function(resolve, reject){
                 let newRecord=true;
                 let lat ='', long ='';
@@ -282,7 +282,7 @@ var app = {
                 if(newRecord){
                     // save our form to websql
                     db.transaction(function(tx){
-                        tx.executeSql(`INSERT INTO contacts(strFullName, strEmail, lat, long, serverId) VALUES (?,?,?,?,?)`, [field1, field2, lat, long, serverId], async (tx, res)=>{
+                        tx.executeSql(`INSERT INTO contacts(strFullName, strEmail, strPhone ,lat, long, serverId) VALUES (?,?,?,?,?,?)`, [field1, field2, field3 ,lat, long, serverId], async (tx, res)=>{
                             console.log(res);
                             if(initial == false){
                                 $.ajax({
@@ -293,7 +293,8 @@ var app = {
                                     data:  JSON.stringify({
                                         firstName: field1,
                                         lastName: '',
-                                        contactNumber: field2
+                                        contactNumber: field2,
+                                        contactEmail: field3
                                     }),
                                     beforeSend: function(xhr){xhr.setRequestHeader('authtoken', localStorage.getItem('token'))},
                                     success: function(response) {
@@ -316,13 +317,13 @@ var app = {
             }); 
         }
         
-        async function insertPhonebookRow(field1, field2){
+        async function insertPhonebookRow(field1, field2, field3){
             return new Promise(function(resolve, reject){
                 
     
                 // save our form to websql
                 db.transaction(function(tx){
-                    tx.executeSql(`INSERT INTO phonebook(strFullName, strPhone) VALUES (?,?)`, [field1, field2], (tx, res)=>{
+                    tx.executeSql(`INSERT INTO phonebook(strFullName, strPhone) VALUES (?,?)`, [field1, field2, field3], (tx, res)=>{
                         console.log(res);
                         resolve(res);
                     });  
@@ -341,6 +342,7 @@ var app = {
                         $("#editContactServerId").val(record.serverId);
                         $("#editContactName").val(record.strFullName);
                         $("#editContactEmail").val(record.strEmail);
+                        $("#editContactPhone").val(record.strPhone);
                         $("body").pagecontainer("change", "#editContactPage");
                     });
                 });
@@ -406,7 +408,7 @@ var app = {
             return new Promise((resolve, reject) =>{
                 db = openDatabase("contactapp", "1", "Contact App", dbSize);
                 db.transaction( (tx) =>{
-                    tx.executeSql('UPDATE contacts SET strFullName=?, strEmail= ? WHERE id=?', [data.strFullName, data.strEmail, data.id], (tx, res) =>{
+                    tx.executeSql('UPDATE contacts SET strFullName=?, strEmail= ?, strPhone=? WHERE id=?', [data.strFullName, data.strEmail,data.strPhone, data.id], (tx, res) =>{
                         if(serverId !== ''){
                             $.ajax({
                                 type: "PUT",
@@ -417,7 +419,8 @@ var app = {
                                     id: serverId,
                                     firstName: data.strFullName,
                                     lastName: '',
-                                    contactNumber: data.strEmail
+                                    contactNumber: data.strEmail,
+                                    contactEmail: data.strPhone
                                 }),
                                 beforeSend: function(xhr){xhr.setRequestHeader('authtoken', localStorage.getItem('token'))},
                                 success: function(response) {
@@ -493,7 +496,7 @@ var app = {
             }
             openDBandLoadContacts();
             async function tapHandler( event ){
-                await insertRow($("#contactName").val(), $("#contactEmail").val(),$("#contactAge").val());
+                await insertRow($("#contactName").val(), $("#contactEmail").val(),$("#contactPhone").val());
                 $("body").pagecontainer("change", "#home");
             }
             async function saveEditHandler (event){
@@ -501,6 +504,7 @@ var app = {
                     'id': $('#editContactId').val(), 
                     'strFullName': $('#editContactName').val(), 
                     'strEmail': $('#editContactEmail').val(),
+                    'strPhone': $('#editContactPhone').val(),
                 }, $('#editContactServerId').val());
                 $("body").pagecontainer("change", "#home");
             }
