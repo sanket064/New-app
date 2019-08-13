@@ -493,7 +493,7 @@ var app = {
             }
             openDBandLoadContacts();
             async function tapHandler( event ){
-                await insertRow($("#contactName").val(), $("#contactEmail").val(),$("#contactAge").val());
+                await insertRow($("#contactName").val(), $("#contactEmail").val(), $("#contactAge").val());
                 $("body").pagecontainer("change", "#home");
             }
             async function saveEditHandler (event){
@@ -501,6 +501,7 @@ var app = {
                     'id': $('#editContactId').val(), 
                     'strFullName': $('#editContactName').val(), 
                     'strEmail': $('#editContactEmail').val(),
+                    'strAge': $('#editContactAge').val(),
                 }, $('#editContactServerId').val());
                 $("body").pagecontainer("change", "#home");
             }
