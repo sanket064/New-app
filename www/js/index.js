@@ -374,7 +374,10 @@ var app = {
             $("#saveEditContact").bind( "tap", saveEditHandler );
             $("#loginButton").bind( "tap", performLogin);
             $("#deleteContact").bind( "tap", deleteContact);
-            $("#startIt").bind( "tap", startGame);
+            $("#startIt").bind( "tap", function(){
+                startGame();
+                $(this).hide();
+            });
             function initialSync(){
                 $.ajax({
                     type: "GET",
@@ -456,16 +459,3 @@ var app = {
         });
     }
 };
-$( document ).bind( 'mobileinit', function(){
-    $.mobile.loader.prototype.options.text = "loading";
-    $.mobile.loader.prototype.options.textVisible = false;
-    $.mobile.loader.prototype.options.theme = "a";
-    $.mobile.loader.prototype.options.html = "";
-  });
-  $.mobile.loading( 'show', {
-	text: 'foo',
-	textVisible: true,
-	theme: 'z',
-	html: ""
-});
-   

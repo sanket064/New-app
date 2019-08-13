@@ -44,6 +44,29 @@ body {
     text-transform:uppercase;
     width:100%;
 }
+canvas {
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+    padding: 0;
+    margin: auto;
+    display: block;
+    width: 338px;
+    height: 400px;
+    margin-top: 30px;
+}
+.button-style{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.start-style{
+    display: grid;
+    justify-content: center;
+}
+.button-size{
+    padding-left: 125px;
+    padding-right: 125px;
+}
 
 /* Portrait layout (default) */
 .app {
