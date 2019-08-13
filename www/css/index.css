@@ -64,8 +64,8 @@ canvas {
     justify-content: center;
 }
 .button-size{
-    padding-left: 125px;
-    padding-right: 125px;
+    padding-left: 125px!important;
+    padding-right: 125px!important;
 }
 
 /* Portrait layout (default) */
