@@ -68,6 +68,7 @@
         <div data-role="header"><h1>My Contacts</h1></div>
         <div data-role="content">
                 <p><a class="ui-btn" href="#add" data-icon="plus">Add New</a></p>
+                 <p><a id="initialSync" class="ui-btn" href="#" data-icon="plus">Initial Sync</a></p>
             <ul data-role="listview" id="contactListLi">
                 <li><a href="#">Empty</a></li>
             </ul>
@@ -77,6 +78,7 @@
                 <ul>
                     <li><a href="#home" data-icon="user" data-role="button" data-theme="a">My Contacts</a></li>
                     <li><a href="#phonebook" data-icon="plus">Phonebook</a></li>
+                    <li><a href="#diary" data-icon="plus">Diary</a></li>
                     <li><a href="#game" data-icon="gear">Game</a></li>
                 </ul>
             </nav>
@@ -95,6 +97,7 @@
                 <ul>
                     <li><a href="#home" data-icon="user">My Contacts</a></li>
                     <li><a href="#phonebook" data-icon="plus">Phonebook</a></li>
+                    <li><a href="#diary" data-icon="plus">Diary</a></li>
                     <li><a href="#game" data-icon="gear">Game</a></li>
                 </ul>
             </nav>
@@ -109,8 +112,8 @@
                 <input type="text" onfocus="this.value=''" id="contactName" />
                 <label>Phone</label>
                 <input type="tel" onfocus="this.value=''" id="contactEmail" />
-                <label>Email</label>
-                <input type="text" onfocus="this.value=''" id="contactPhone" />
+                <label>Age</label>
+                <input type="text" id="contactAge" />
                 <button id="saveNewContact">Save</button>
             </div>
         </div>
@@ -119,6 +122,7 @@
                 <ul>
                     <li><a href="#home" data-icon="user">My Contacts</a></li>
                     <li><a href="#phonebook" data-icon="plus">Phonebook</a></li>
+                    <li><a href="#diary" data-icon="plus">Diary</a></li>
                     <li><a href="#game" data-icon="gear">Game</a></li>
                 </ul>
             </nav>
@@ -134,8 +138,8 @@
                 <input type="text" id="editContactName" />
                 <label>Phone</label>
                 <input type="tel" id="editContactEmail" />
-                <label>Email</label>
-                <input type="text" id="editContactPhone" />
+                <label>Age</label>
+                <input type="text" id="editContactAge" />
                 <button id="saveEditContact">Save</button>
                 <button id="deleteContact">Delete Contact</button>
             </div>
@@ -145,11 +149,39 @@
                 <ul>
                     <li><a href="#home" data-icon="user">My Contacts</a></li>
                     <li><a href="#phonebook" data-icon="plus">Phonebook</a></li>
+                    <li><a href="#diary" data-icon="plus">Diary</a></li>
                     <li><a href="#game" data-icon="gear">Game</a></li>
                 </ul>
             </nav>
         </div>
     </div>
+
+    <div data-role="page" id="diary">
+        <div data-role="header"><h1>Diary</h1></div>
+        <div data-role="content">
+            <div class="myForm">
+                <div id="map" style="height:400px;"></div>
+                <label>Notes:</label>
+                <input type="textarea" id="diaryNotes" />
+                <button id="captureSelfie">Selfie</button>
+                <img id="selfie" style="width:100%" src="" />
+                <button id="cleanupSelfies">Selfie</button>
+                <button id="saveDiaryNote">Save</button>
+            </div>
+        </div>
+        <div data-role="footer" data-position="fixed">
+            <nav data-role="navbar">
+                <ul>
+                    <li><a href="#home" data-icon="user">My Contacts</a></li>
+                    <li><a href="#phonebook" data-icon="plus">Phonebook</a></li>
+                    <li><a href="#diary" data-icon="plus">Diary</a></li>
+                    <li><a href="#game" data-icon="gear">Game</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div> 
+
+
 
     <div data-role="page" id="game">
         <div data-role="header"><h1>Let's Play Game</h1></div>
@@ -181,6 +213,7 @@
                 <ul>
                     <li><a href="#home" data-icon="user">My Contacts</a></li>
                     <li><a href="#phonebook" data-icon="plus">Phonebook</a></li>
+                    <li><a href="#diary" data-icon="plus">Diary</a></li>
                      <li><a href="#game" data-icon="gear">Game</a></li>
                 </ul>
             </nav>
