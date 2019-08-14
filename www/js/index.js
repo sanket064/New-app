@@ -254,7 +254,7 @@ var app = {
                 console.log(results.rows);
                 var len = results.rows.length, i;
                 for (i = 0; i < len; i++) {
-                    list.append(`<li><a class="copyPhoneContact" data-id="${results.rows.item(i).ID}">${results.rows.item(i).strFullName}</li>`);
+                    list.append(`<li><a class="copyPhoneContact" data-id="${results.rows.item(i).ID}">${results.rows.item(i).strFullName}${results.rows.item(i).strAge}</li>`);
                 }
                 $("#phoneContactsListLi").listview("refresh");
                 resolve();
